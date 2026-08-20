@@ -1,0 +1,15 @@
+BANAMEX                       GOMJ990101XYZJACOB               01500000
+BANAMEX                       LOPC970303DEFCARLOS              01600000
+BANAMEX                       PERL960404GHILUIS                01400000
+BANAMEX                       RAMJ940606MNOJORGE               01550000
+MICROSOFT CORP                LOPC970303DEFCARLOS              02900000
+MICROSOFT CORP                MARA980202ABCANA                 03000000
+MICROSOFT CORP                PERL960404GHILUIS                02800000
+NTT DATA MEXICO               GOMJ990101XYZJACOB               01800000
+NTT DATA MEXICO               MARA980202ABCANA                 02100000
+NTT DATA MEXICO               RAMJ940606MNOJORGE               01900000
+NTT DATA MEXICO               SALD950505JKLDIANA               02200000
+TESLA MOTORS                  GOMJ990101XYZJACOB               03600000
+TESLA MOTORS                  MARA980202ABCANA                 03500000
+TESLA MOTORS                  PERL960404GHILUIS                03800000
+TESLA MOTORS                  SALD950505JKLDIANA               04000000

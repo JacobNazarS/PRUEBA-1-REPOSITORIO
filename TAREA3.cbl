@@ -1,0 +1,127 @@
+      ******************************************************************
+      * Author:JACOB
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CRUCE-UNO-A-MUCHOS.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+       SELECT MAESTRO-EMP ASSIGN TO "EMPLEADO.txt"
+       ORGANIZATION IS LINE SEQUENTIAL.
+
+       SELECT ARCHIVO-SUELDOS ASSIGN TO "SUELDOS.txt"
+       ORGANIZATION IS LINE SEQUENTIAL.
+
+       SELECT ARCHIVO-TEMP ASSIGN TO "TEMPT.TMP".
+
+       SELECT SUELDOS-ORDENADOS ASSIGN TO "SUELDOS-ORD.txt"
+       ORGANIZATION IS LINE SEQUENTIAL.
+
+       SELECT REPORTE-OUT ASSIGN TO "REPORTE.TXT"
+       ORGANIZATION IS LINE SEQUENTIAL.
+
+       DATA DIVISION.
+       FILE SECTION.
+
+       FD MAESTRO-EMP.
+           01 REG-MAESTRO.
+           05 EMP-ID PIC 9(3).
+           05 EMP-NOMBRE PIC X(20).
+
+           FD ARCHIVO-SUELDOS.
+           01 REG-SUELDO.
+           05 SUE-ID PIC 9(3).
+           05 SUE-MES PIC X(15).
+           05 SUE-MONTO PIC 9(5).
+
+           SD ARCHIVO-TEMP.
+           01 REG-TEMP.
+           05 TMP-ID PIC 9(3).
+           05 TMP-MES PIC X(15).
+           05 TMP-MONTO PIC 9(5).
+
+           FD SUELDOS-ORDENADOS.
+           01 REG-SUELDO-ORD.
+           05 ORD-ID PIC 9(3).
+           05 ORD-MES PIC X(15).
+           05 ORD-MONTO PIC 9(5).
+
+           FD REPORTE-OUT.
+           01 REG-REPORTE PIC X(60).
+
+       WORKING-STORAGE SECTION.
+           01 WS-BANDERAS.
+           05 WS-FIN-MAESTRO PIC X VALUE "N".
+           05 WS-FIN-SUELDOS PIC X VALUE "N".
+
+           01 WS-LINEA-REP.
+           05 REP-ID PIC 9(3).
+           05 FILLER PIC X(3) VALUE "-".
+           05 REP-NOMBRE PIC X(20).
+           05 FILLER PIC X(2) VALUE SPACES.
+           05 REP-MES PIC X(15).
+           05 FILLER PIC X(2) VALUE SPACES.
+           05 REP-MONTO PIC $ZZ,ZZ9.
+
+       PROCEDURE DIVISION.
+       0000-PRINCIPAL.
+           SORT ARCHIVO-TEMP ON ASCENDING KEY TMP-ID
+           USING ARCHIVO-SUELDOS
+           GIVING SUELDOS-ORDENADOS.
+
+           OPEN INPUT MAESTRO-EMP
+           OPEN INPUT SUELDOS-ORDENADOS
+           OPEN OUTPUT REPORTE-OUT
+
+           WRITE REG-REPORTE FROM "REP. BANCARIO DE PAGOS RELACION 1-N"
+
+           WRITE REG-REPORTE FROM " "
+
+           PERFORM 1000-LEER-MAESTRO
+           PERFORM 2000-LEER-SUELDOS
+
+           PERFORM UNTIL WS-FIN-MAESTRO = "Y"
+           AND WS-FIN-SUELDOS = "Y"
+           EVALUATE TRUE WHEN EMP-ID = ORD-ID
+
+           MOVE EMP-ID TO REP-ID
+           MOVE EMP-NOMBRE TO REP-NOMBRE
+           MOVE ORD-MES TO REP-MES
+           MOVE ORD-MONTO TO REP-MONTO
+
+           WRITE REG-REPORTE FROM WS-LINEA-REP
+
+           PERFORM 2000-LEER-SUELDOS WHEN EMP-ID < ORD-ID
+           PERFORM 1000-LEER-MAESTRO WHEN EMP-ID > ORD-ID
+
+           PERFORM 2000-LEER-SUELDOS
+           END-EVALUATE
+           END-PERFORM.
+
+           CLOSE MAESTRO-EMP
+           CLOSE SUELDOS-ORDENADOS
+           CLOSE REPORTE-OUT.
+
+           DISPLAY "PROCESO TERMINADO. REVISA EL ARCHIVO REPORTE.txt"
+
+           STOP RUN.
+
+           1000-LEER-MAESTRO.
+           READ MAESTRO-EMP
+           AT END
+           MOVE "Y" TO WS-FIN-MAESTRO
+           MOVE 999 TO EMP-ID
+           END-READ.
+
+           2000-LEER-SUELDOS.
+            READ SUELDOS-ORDENADOS
+            AT END
+            MOVE "Y" TO WS-FIN-SUELDOS
+            MOVE 999 TO ORD-ID
+            END-READ.
+
+
+       END PROGRAM CRUCE-UNO-A-MUCHOS.

@@ -1,0 +1,157 @@
+      ******************************************************************
+      * Author:JACOB
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. UNO-MUCHOS-TELEFONOS.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT MAESTRO-EMP ASSIGN TO "EMPLEADOSS.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT ARCHIVO-TEMP-EMP ASSIGN TO "TEMP_EMP.tmp".
+           SELECT EMPLEADOS-ORDENADOS ASSIGN TO "EMPLEADOSS_ORD.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT ARCHIVO-TELEFONOS ASSIGN TO "TELEFONOS.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT ARCHIVO-TEMP-TEL ASSIGN TO "TEMP_TEL.tmp".
+           SELECT TELEFONOS-ORDENADOS ASSIGN TO "TELEFONOS_ORD.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT REPORTE-OUT ASSIGN TO "REPORTE TEL.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD MAESTRO-EMP.
+       01 REG-MAESTRO.
+           05 EMP-ID PIC 9(3).
+           05 EMP-NOMBRE PIC X(20).
+
+       SD ARCHIVO-TEMP-EMP.
+       01 REG-TEMP-EMP.
+           05 TMP-EMP-ID PIC 9(3).
+           05 TMP-EMP-NOM PIC X(20).
+
+       FD EMPLEADOS-ORDENADOS.
+       01 REG-EMP-ORD.
+           05 ORD-EMP-ID PIC 9(3).
+           05 ORD-EMP-NOM PIC X(20).
+
+       FD ARCHIVO-TELEFONOS.
+       01 REG-TELEFONO.
+           05 TEL-ID PIC 9(3).
+           05 TEL-NUM PIC X(10).
+
+       SD ARCHIVO-TEMP-TEL.
+       01 REG-TEMP-TEL.
+           05 TMP-TEL-ID PIC 9(3).
+           05 TMP-TEL-NUM PIC X(10).
+
+       FD TELEFONOS-ORDENADOS.
+       01 REG-TEL-ORD.
+           05 ORD-TEL-ID PIC 9(3).
+           05 ORD-TEL-NUM PIC X(10).
+
+       FD REPORTE-OUT.
+       01 REG-REPORTE PIC X(120).
+
+       WORKING-STORAGE SECTION.
+       01 WS-BANDERAS.
+           05 WS-FIN-MAESTRO PIC X VALUE "N".
+           05 WS-FIN-TELEFONOS PIC X VALUE "N".
+
+       01 WS-INDICES.
+           05 WS-I PIC 9(2) VALUE 1.
+
+       01 WS-REGISTRO-FINAL.
+           05 REP-EMP-ID PIC 9(3).
+           05 SEP-GUION PIC X(3) VALUE " - ".
+           05 REP-EMP-NOMBRE PIC X(20).
+           05 TITULO-TELS PIC X(6) VALUE " TELS:".
+
+           05 MATRIZ-TEL OCCURS 5 TIMES.
+              10 TEL-OUT PIC X(13).
+              10 SEPARADOR PIC X(2).
+
+       PROCEDURE DIVISION.
+       0000-PRINCIPAL.
+           PERFORM 1000-INICIO
+           PERFORM 2000-PROCESO-PRINCIPAL
+           PERFORM 3000-FINAL
+           STOP RUN.
+
+       1000-INICIO.
+           SORT ARCHIVO-TEMP-EMP ON ASCENDING KEY TMP-EMP-ID
+                USING MAESTRO-EMP GIVING EMPLEADOS-ORDENADOS.
+
+           SORT ARCHIVO-TEMP-TEL ON ASCENDING KEY TMP-TEL-ID
+                USING ARCHIVO-TELEFONOS GIVING TELEFONOS-ORDENADOS.
+
+           OPEN INPUT EMPLEADOS-ORDENADOS
+           OPEN INPUT TELEFONOS-ORDENADOS
+           OPEN OUTPUT REPORTE-OUT.
+
+           WRITE REG-REPORTE FROM "REPORTE EMPLEADOS 1-N COMPLETO"
+
+           PERFORM 8000-LEER-MAESTRO
+           PERFORM 9000-LEER-TELEFONOS.
+
+       2000-PROCESO-PRINCIPAL.
+           PERFORM 2100-PROCESAR-EMPLEADO
+                  UNTIL WS-FIN-MAESTRO = "Y".
+
+       2100-PROCESAR-EMPLEADO.
+           MOVE SPACES TO WS-REGISTRO-FINAL
+           MOVE " - " TO SEP-GUION
+           MOVE "TELS:" TO TITULO-TELS
+           MOVE ORD-EMP-ID TO REP-EMP-ID
+           MOVE ORD-EMP-NOM TO REP-EMP-NOMBRE
+           MOVE 1 TO WS-I
+
+           PERFORM 2200-BUSCAR-TELEFONOS
+                  UNTIL ORD-TEL-ID > ORD-EMP-ID
+                       OR WS-FIN-TELEFONOS = "Y"
+           IF WS-I = 1
+               MOVE "SIN REGISTROS" TO TEL-OUT(1)
+           END-IF
+
+           WRITE REG-REPORTE FROM WS-REGISTRO-FINAL
+           PERFORM 8000-LEER-MAESTRO.
+
+       2200-BUSCAR-TELEFONOS.
+           IF ORD-TEL-ID = ORD-EMP-ID
+               IF WS-I <= 5
+                   MOVE ORD-TEL-NUM TO TEL-OUT(WS-I)
+                   MOVE ", " TO SEPARADOR(WS-I)
+                   ADD 1 TO WS-I
+               ELSE
+                   DISPLAY "ALERTA:EMPLEADO" ORD-EMP-ID " EXCEDE 5 TELS"
+               END-IF
+           END-IF
+           PERFORM 9000-LEER-TELEFONOS.
+
+       3000-FINAL.
+           CLOSE EMPLEADOS-ORDENADOS
+           CLOSE TELEFONOS-ORDENADOS
+           CLOSE REPORTE-OUT
+           DISPLAY "PROCES.TERMINADO.REVISA EL ARCHIVO REPORTE TEL.txt".
+
+       8000-LEER-MAESTRO.
+           READ EMPLEADOS-ORDENADOS
+                AT END
+                   MOVE "Y" TO WS-FIN-MAESTRO
+                   MOVE 999 TO ORD-EMP-ID
+           END-READ.
+
+       9000-LEER-TELEFONOS.
+           READ TELEFONOS-ORDENADOS
+                AT END
+                   MOVE "Y" TO WS-FIN-TELEFONOS
+                   MOVE 999 TO ORD-TEL-ID
+           END-READ.
+
+       END PROGRAM UNO-MUCHOS-TELEFONOS.

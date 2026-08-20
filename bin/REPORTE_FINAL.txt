@@ -1,0 +1,16 @@
+REPORTE N-N ORD X EMPRESA
+BANAMEX                       |  GOMJ990101XYZ|  JACOB               |  $ 15,000.00
+BANAMEX                       |  LOPC970303DEF|  CARLOS              |  $ 16,000.00
+BANAMEX                       |  PERL960404GHI|  LUIS                |  $ 14,000.00
+BANAMEX                       |  RAMJ940606MNO|  JORGE               |  $ 15,500.00
+MICROSOFT CORP                |  LOPC970303DEF|  CARLOS              |  $ 29,000.00
+MICROSOFT CORP                |  MARA980202ABC|  ANA                 |  $ 30,000.00
+MICROSOFT CORP                |  PERL960404GHI|  LUIS                |  $ 28,000.00
+NTT DATA MEXICO               |  GOMJ990101XYZ|  JACOB               |  $ 18,000.00
+NTT DATA MEXICO               |  MARA980202ABC|  ANA                 |  $ 21,000.00
+NTT DATA MEXICO               |  RAMJ940606MNO|  JORGE               |  $ 19,000.00
+NTT DATA MEXICO               |  SALD950505JKL|  DIANA               |  $ 22,000.00
+TESLA MOTORS                  |  GOMJ990101XYZ|  JACOB               |  $ 36,000.00
+TESLA MOTORS                  |  MARA980202ABC|  ANA                 |  $ 35,000.00
+TESLA MOTORS                  |  PERL960404GHI|  LUIS                |  $ 38,000.00
+TESLA MOTORS                  |  SALD950505JKL|  DIANA               |  $ 40,000.00

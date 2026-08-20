@@ -1,0 +1,28 @@
+REP. BANCARIO DE PAGOS RELACION 1-N
+
+001-  JACOB NAZAR           FEBRERO          $15,000
+001-  JACOB NAZAR           ENERO            $15,000
+001-  JACOB NAZAR           MARZO            $15,000
+002-  ANA MARTINEZ          ENERO            $18,000
+002-  ANA MARTINEZ          FEBRERO          $18,000
+002-  ANA MARTINEZ          MARZO            $18,000
+003-  CARLOS LOPEZ          ENERO            $16,000
+003-  CARLOS LOPEZ          FEBRERO          $16,000
+003-  CARLOS LOPEZ          MARZO            $16,000
+004-  MARIA FERNANDEZ       ENERO            $15,500
+004-  MARIA FERNANDEZ       FEBRERO          $15,500
+005-  LUIS PEREZ            MARZO            $12,000
+005-  LUIS PEREZ            ENERO            $12,000
+005-  LUIS PEREZ            FEBRERO          $12,000
+006-  DIANA SALAZAR         FEBRERO          $16,500
+006-  DIANA SALAZAR         ENERO            $16,500
+007-  JORGE RAMIREZ         FEBRERO          $14,000
+007-  JORGE RAMIREZ         ENERO            $14,000
+008-  VALERIA CASTRO        MARZO            $17,000
+008-  VALERIA CASTRO        ENERO            $17,000
+008-  VALERIA CASTRO        FEBRERO          $17,000
+009-  RICARDO GOMEZ         ENERO            $13,500
+009-  RICARDO GOMEZ         MARZO            $13,500
+010-  SOFIA MENDOZA         FEBRERO          $19,000
+010-  SOFIA MENDOZA         ENERO            $19,000
+010-  SOFIA MENDOZA         MARZO            $19,000

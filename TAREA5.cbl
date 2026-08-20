@@ -1,0 +1,229 @@
+      ******************************************************************
+      * Author:JACOB
+      * Date:
+      * Purpose:
+      * Tectonics: cobc
+      ******************************************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. RELACION-N-N.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+
+           SELECT ARCHIVO-RFC ASSIGN TO "RFC.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT TMP-RFC ASSIGN TO "TMP_RFC.tmp".
+           SELECT RFC-ORD ASSIGN TO "RFC_ORD.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT ARCHIVO-EMPRESAS ASSIGN TO "EMPRESAS.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT TMP-EMP ASSIGN TO "TMPO_EMP.tmp".
+           SELECT EMPRESAS-ORD ASSIGN TO "EMPRESAS_ORD.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT PREVIO-OUT ASSIGN TO "REPORTE_PREVIO.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT TMP-PREVIO ASSIGN TO "TMP_PREVIO.tmp".
+           SELECT PREVIO-ORD ASSIGN TO "REPORTE_PREVIO_ORD.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT REPORTE-FINAL-OUT ASSIGN TO "REPORTE_FINAL.txt"
+                 ORGANIZATION IS LINE SEQUENTIAL.
+
+       DATA DIVISION.
+       FILE SECTION.
+
+       FD ARCHIVO-RFC
+           RECORD CONTAINS 85 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-RFC.
+
+       01 REG-RFC.
+           05 RFC-LLAVE-EMPRESA PIC X(12).
+           05 RFC-LLAVE-PERSONA PIC X(13).
+           05 RFC-NOMBRE PIC X(20).
+           05 RFC-APATERNO PIC X(20).
+           05 RFC-AMATERNO PIC X(20).
+
+       SD TMP-RFC.
+       01 REG-TMP-RFC.
+           05 T-RFC-EMP PIC X(12).
+           05 T-RFC-PER PIC X(13).
+           05 FILLER PIC X(60).
+
+       FD RFC-ORD
+           RECORD CONTAINS 85 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-RFC-ORD.
+       01 REG-RFC-ORD.
+           05 O-RFC-EMP PIC X(12).
+           05 O-RFC-PER PIC X(13).
+           05 O-RFC-NOM PIC X(20).
+           05 O-RFC-PAT PIC X(20).
+           05 O-RFC-MAT PIC X(20).
+
+       FD ARCHIVO-EMPRESAS
+           RECORD CONTAINS 71 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-EMPRESAS.
+       01 REG-EMPRESAS.
+           05 EMP-LLAVE-EMPRESA PIC X(12).
+           05 EMP-LLAVE-PERSONA PIC X(13).
+           05 EMP-NOMBRE PIC X(30).
+           05 EMP-FECHA PIC X(08).
+           05 EMP-SALARIO PIC 9(06)V9(02).
+
+       SD TMP-EMP.
+       01 REG-TMP-EMP.
+           05 T-EMP-EMP PIC X(12).
+           05 T-EMP-PER PIC X(13).
+           05 FILLER PIC X(46).
+
+       FD EMPRESAS-ORD
+           RECORD CONTAINS 71 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-EMP-ORD.
+       01 REG-EMP-ORD.
+           05 O-EMP-EMP PIC X(12).
+           05 O-EMP-PER PIC X(13).
+           05 O-EMP-NOM PIC X(30).
+           05 O-EMP-FEC PIC X(08).
+           05 O-EMP-SAL PIC 9(06)V9(02).
+
+       FD PREVIO-OUT
+           RECORD CONTAINS 71 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-PREVIO.
+       01 REG-PREVIO.
+           05 P-EMP-NOM PIC X(30).
+           05 P-RFC-PER PIC X(13).
+           05 P-RFC-NOM PIC X(20).
+           05 P-EMP-SAL PIC 9(06)V9(02).
+
+       SD TMP-PREVIO.
+       01 REG-TMP-PREVIO.
+           05 TP-EMP-NOM PIC X(30).
+           05 FILLER PIC X(41).
+
+       FD PREVIO-ORD
+           RECORD CONTAINS 71 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-PREVIO-ORD.
+       01 REG-PREVIO-ORD.
+           05 OP-EMP-NOM PIC X(30).
+           05 OP-RFC-PER PIC X(13).
+           05 OP-RFC-NOM PIC X(20).
+           05 OP-EMP-SAL PIC 9(06)V9(02).
+
+       FD REPORTE-FINAL-OUT
+           RECORD CONTAINS 100 CHARACTERS
+           BLOCK CONTAINS 0 RECORDS
+           DATA RECORD IS REG-REPORTE.
+       01 REG-REPORTE PIC X(100).
+
+       WORKING-STORAGE SECTION.
+       01 WS-BANDERAS.
+           05 WS-FIN-RFC PIC X VALUE "N".
+           05 WS-FIN-EMP PIC X VALUE "N".
+           05 WS-FIN-PREVIO PIC X VALUE "N".
+
+       01 WS-LINEA-REP.
+           05 REP-EMPRESA PIC X(30).
+           05 FILLER PIC X(3) VALUE "|".
+           05 REP-RFC PIC X(13).
+           05 FILLER PIC X(3) VALUE "|".
+           05 REP-EMPLEADO PIC X(20).
+           05 FILLER PIC X(3) VALUE "|".
+           05 REP-SALARIO PIC $ZZZ,ZZ9.99.
+
+       PROCEDURE DIVISION.
+       0000-PRINCIPAL.
+           PERFORM 1000-FASE1-ORDENAR-ARCHIVOS
+           PERFORM 2000-FASE2-CRUCE-MATCH
+           PERFORM 3000-FASE3-ORDENAR-REPORTE
+           PERFORM 4000-IMPRIMIR-FINAL.
+            STOP RUN.
+
+       1000-FASE1-ORDENAR-ARCHIVOS.
+           SORT TMP-RFC ON ASCENDING KEY T-RFC-EMP, T-RFC-PER
+               USING ARCHIVO-RFC GIVING RFC-ORD.
+
+           SORT TMP-EMP ON ASCENDING KEY T-EMP-EMP, T-EMP-PER
+               USING ARCHIVO-EMPRESAS GIVING EMPRESAS-ORD.
+
+       2000-FASE2-CRUCE-MATCH.
+           OPEN INPUT RFC-ORD
+           OPEN INPUT EMPRESAS-ORD
+           OPEN OUTPUT PREVIO-OUT.
+
+           PERFORM 8100-LEER-RFC
+           PERFORM 8200-LEER-EMPRESA
+
+           PERFORM UNTIL WS-FIN-RFC = "Y" AND WS-FIN-EMP = "Y"
+               IF O-RFC-EMP = O-EMP-EMP AND O-RFC-PER = O-EMP-PER
+                   MOVE O-EMP-NOM TO P-EMP-NOM
+                   MOVE O-RFC-PER TO P-RFC-PER
+                   MOVE O-RFC-NOM TO P-RFC-NOM
+                   MOVE O-EMP-SAL TO P-EMP-SAL
+                   WRITE REG-PREVIO
+                   PERFORM 8100-LEER-RFC
+                   PERFORM 8200-LEER-EMPRESA
+               ELSE
+                   IF O-RFC-EMP < O-EMP-EMP
+                      PERFORM 8100-LEER-RFC
+                   ELSE
+                      PERFORM 8200-LEER-EMPRESA
+                   END-IF
+               END-IF
+           END-PERFORM.
+
+           CLOSE RFC-ORD
+           CLOSE EMPRESAS-ORD
+           CLOSE PREVIO-OUT.
+
+       3000-FASE3-ORDENAR-REPORTE.
+           SORT TMP-PREVIO ON ASCENDING KEY TP-EMP-NOM
+               USING PREVIO-OUT GIVING PREVIO-ORD.
+
+       4000-IMPRIMIR-FINAL.
+           OPEN INPUT PREVIO-ORD
+           OPEN OUTPUT REPORTE-FINAL-OUT.
+
+           WRITE REG-REPORTE FROM "REPORTE N-N ORD X EMPRESA"
+
+           PERFORM 8300-LEER-PREVIO
+           PERFORM UNTIL WS-FIN-PREVIO = "Y"
+                  MOVE OP-EMP-NOM TO REP-EMPRESA
+                  MOVE OP-RFC-PER TO REP-RFC
+                  MOVE OP-RFC-NOM TO REP-EMPLEADO
+                  MOVE OP-EMP-SAL TO REP-SALARIO
+                  WRITE REG-REPORTE FROM WS-LINEA-REP
+                  PERFORM 8300-LEER-PREVIO
+           END-PERFORM.
+
+           CLOSE PREVIO-ORD
+           CLOSE REPORTE-FINAL-OUT
+           DISPLAY "PROCESO FINALIZADO. REVISA REPORTE_FINAL.txt".
+
+       8100-LEER-RFC.
+           READ RFC-ORD
+               AT END MOVE "Y" TO WS-FIN-RFC
+                      MOVE HIGH-VALUES TO O-RFC-EMP
+                      MOVE HIGH-VALUES TO OP-RFC-PER
+           END-READ.
+
+       8200-LEER-EMPRESA.
+           READ EMPRESAS-ORD
+               AT END MOVE "Y" TO WS-FIN-EMP
+                      MOVE HIGH-VALUES TO O-EMP-EMP
+                      MOVE HIGH-VALUES TO O-EMP-PER
+           END-READ.
+
+       8300-LEER-PREVIO.
+           READ PREVIO-ORD
+               AT END MOVE "Y" TO WS-FIN-PREVIO
+           END-READ.
+
+       END PROGRAM RELACION-N-N.

@@ -1,0 +1,15 @@
+NTTD98765432GOMJ990101XYZJACOB               GONZALEZ            NAZAR               
+TSLA11223344MARA980202ABCANA                 MARTINEZ            LOPEZ               
+BAMX12345678LOPC970303DEFCARLOS              LOPEZ               GARCIA              
+NTTD98765432SALD950505JKLDIANA               SALAZAR             PEREZ               
+BAMX12345678GOMJ990101XYZJACOB               GONZALEZ            NAZAR               
+MSFT55667788PERL960404GHILUIS                PEREZ               GOMEZ               
+TSLA11223344SALD950505JKLDIANA               SALAZAR             PEREZ               
+BAMX12345678PERL960404GHILUIS                PEREZ               GOMEZ               
+MSFT55667788MARA980202ABCANA                 MARTINEZ            LOPEZ               
+NTTD98765432RAMJ940606MNOJORGE               RAMIREZ             CASTRO              
+TSLA11223344GOMJ990101XYZJACOB               GONZALEZ            NAZAR               
+BAMX12345678RAMJ940606MNOJORGE               RAMIREZ             CASTRO              
+MSFT55667788LOPC970303DEFCARLOS              LOPEZ               GARCIA              
+NTTD98765432MARA980202ABCANA                 MARTINEZ            LOPEZ               
+TSLA11223344PERL960404GHILUIS                PEREZ               GOMEZ 
